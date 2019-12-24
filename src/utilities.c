@@ -6,21 +6,16 @@
 
 /* Processes command line arguments */
 void process_CLA(int argc, char **argv) {
-  if (argc == 1) {
-    game.user_symbol = NOUGHT; /* Default user symbol */
-    game.comp_symbol = CROSS; /* Default computer symbol */
-    return;
-  }
+  game.user_symbol = NOUGHT; /* Default user symbol */
+  game.comp_symbol = CROSS; /* Default computer symbol */
+
+  if (argc == 1) return;
 
   if (argc > 2 || argv[1][0] != '-')
     terminate_game_session("Invalid program arguments");
 
   switch (argv[1][1]) {
-    case 'o': case 'O':
-      game.user_symbol = NOUGHT;
-      game.comp_symbol = CROSS;
-      break;
-
+    case 'o': case 'O': break;
     case 'x': case 'X':
       game.user_symbol = CROSS;
       game.comp_symbol = NOUGHT;
