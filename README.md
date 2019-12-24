@@ -5,9 +5,7 @@ Goal for this project is to make the pen-and-paper game [Tic-Tac-Toe](https://en
 ![](https://i.imgur.com/Xdk4HAt.png)
 
 ### Usage
-The following command line options are available during the compilation phase:
-
-- \-o : Sets the user's symbol to 'O' (nought)
+The following command line option is available during the compilation phase:
 
 - \-x : Sets the user's symbol to 'X' (cross)
 
