@@ -15,7 +15,6 @@ void process_CLA(int argc, char **argv) {
     terminate_game_session("Invalid program arguments");
 
   switch (argv[1][1]) {
-    case 'o': case 'O': break;
     case 'x': case 'X':
       game.user_symbol = CROSS;
       game.comp_symbol = NOUGHT;
