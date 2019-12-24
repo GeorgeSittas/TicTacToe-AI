@@ -17,16 +17,19 @@ The following command line option is available during the compilation phase:
 #### Starting the game
 ##### 1) with default parameters (i.e. user symbol is set to 'O')
 ```
+cd TicTacToe-AI
 make play
 ```
 ##### 2) with user-specified parameters
 ```
+cd TicTacToe-AI
 make
 ./tic_tac_toe <parameter_list> (e.g. ./tic_tac_toe -x)
 ```
 
 #### File cleanup
 ```
+cd TicTacToe-AI
 make clean
 ```
 
