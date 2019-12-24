@@ -4,6 +4,11 @@ Goal for this project is to make the pen-and-paper game [Tic-Tac-Toe](https://en
 
 ![](https://i.imgur.com/Xdk4HAt.png)
 
+### Install
+```
+git clone https://github.com/GeorgeSittas/TicTacToe-AI.git
+```
+
 ### Usage
 The following command line option is available during the compilation phase:
 
