@@ -30,3 +30,6 @@ In each round, a player (either the user or the computer) makes a move, with the
 being played by the player with the cross symbol (X). Whenever it is the user's turn to make
 a move, he can type q or Q to quit the game, or choose a move in the form of \<letter\>\<number\>,
 where letter is one of A, B and C, and number is one of 1, 2 and 3 (e.g. A3).
+
+### Notes
+In this version of the game, the computer plays the best move in each round (max-depth minimax search)
