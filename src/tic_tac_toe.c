@@ -10,7 +10,7 @@ void init_game(void) {
   game.turn_no = 1;
 }
 
-void next_turn(void) { game.user_plays ^= true; game.turn_no++; }
+void next_turn(void) { game.user_plays ^= true, game.turn_no++; }
 
 void user_move(void) {
   printf("> "); skip_whitespace();
