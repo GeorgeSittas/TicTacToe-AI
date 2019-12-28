@@ -67,10 +67,7 @@ void skip_whitespace(void) {
   ungetc(token, stdin);
 }
 
-void flush_input(void) {
-  int token;
-  while ((token = getchar()) != '\n');
-}
+void flush_input(void) { while (getchar() != '\n'); }
 
 void terminate_game_session(char *msg) {
   printf("%s\n", msg);
