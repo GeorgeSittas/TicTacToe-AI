@@ -13,7 +13,7 @@ void computer_move(void);
 #define M_INF   -1
 #define DRAW_VAL 0
 
-int minimax(bool_t, bool_t *, int turn, int *, int *);
+int minimax(bool, bool *, int turn, int *, int *);
 
-bool_t winning_sequence_exists(char);
+bool winning_sequence_exists(char);
 state_t game_state(void);
