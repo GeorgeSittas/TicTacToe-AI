@@ -1,186 +1,75 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "tic_tac_toe.h"
-#include "board.h"
-#include "utilities.h"
+#include "../include/tic_tac_toe.h"
+#include "../include/utilities.h"
 
-void init_game(void) {
-  init_board();
-  game.user_plays = (user_symbol() == CROSS); // X plays first
-  game.turn_no = 1;
+// Processes command line arguments
+void process_CLA(int argc, char **argv) {
+  game.user_symbol = NOUGHT; // Default user symbol
+  game.comp_symbol = CROSS; // Default computer symbol
+
+  if (argc == 1) return;
+
+  if (argc > 2 || argv[1][0] != '-')
+    terminate_game_session("Invalid program arguments");
+
+  switch (argv[1][1]) {
+    case 'x': case 'X':
+      game.user_symbol = CROSS;
+      game.comp_symbol = NOUGHT;
+      break;
+
+    default: terminate_game_session("Invalid program arguments");
+  }
+
+  if (argv[1][2] != '\0') terminate_game_session("Invalid program arguments");
 }
 
-void next_turn(void) { game.user_plays ^= 1, game.turn_no++; }
+bool valid_index(int index) { return (index >= 0 && index < SIZE); }
 
-void user_move(void) {
-  printf("> "); skip_whitespace();
+bool valid_indeces(int row, int col) {
+  return (valid_index(row) && valid_index(col));
+}
 
-  int row, col;
+void set_board(int row, int col, char symbol) {
+  if (!valid_indeces(row, col))
+    terminate_game_session("error: invalid indeces (set_board)");
+
+  game.board[row][col] = symbol;
+}
+
+char get_board(int row, int col) {
+  if (!valid_indeces(row, col))
+    terminate_game_session("error: invalid indeces (get_board)");
+
+  return game.board[row][col];
+}
+
+bool is_board(int row, int col, char symbol) {
+  if (!valid_indeces(row, col))
+    terminate_game_session("error: invalid indeces (is_board)");
+
+  return (get_board(row, col) == symbol);
+}
+
+char user_symbol(void)  { return game.user_symbol; }
+char comp_symbol(void)  { return game.comp_symbol; }
+bool user_plays(void) { return game.user_plays;  }
+int turn_no(void)       { return game.turn_no;     }
+
+void skip_whitespace(void) {
   int token = getchar();
 
-  if (token == 'q' || token == 'Q') terminate_game_session("Ciao!");
+  while (token == ' ' || token == '\t')
+    token = getchar();
 
-  if (!valid_index(col = token - 'A')) {
-    printf("Invalid directive, try again\n");
-    flush_input(); user_move(); return;
-  }
-
-  token = getchar();
-  if (!valid_index(row = token - '1')) {
-    printf("Invalid directive, try again\n");
-    flush_input(); user_move(); return;
-  }
-
-  if (!is_board(row, col, EMPTY)) {
-    printf("Occupied position, try again\n");
-    flush_input(); user_move(); return;
-  }
-
-  skip_whitespace();
-  if ((token = getchar()) != '\n') {
-    printf("Invalid directive, try again\n");
-    flush_input(); user_move(); return;
-  }
-
-  printf("User played: %c%d\n", 'A'+col, 1+row);
-  set_board(row, col, user_symbol());
+  ungetc(token, stdin);
 }
 
-void computer_move(void) {
-  int row, col;
+void flush_input(void) { while (getchar() != '\n'); }
 
-  /* Extra flag that's used to stop the search in case terminal
-   * states are reached early (in the first or second move)
-   */
-
-  bool stop = false;
-
-  minimax(true, &stop, turn_no(), &row, &col);
-  if (!valid_indeces(row, col))
-    terminate_game_session("error: invalid move for computer");
-
-  printf("Computer played: %c%d\n", 'A'+col, 1+row);
-  set_board(row, col, comp_symbol());
-}
-
-int minimax(bool max_plays, bool *stop, int turn, int *row, int *col) {
-  if ( max_plays && winning_sequence_exists(comp_symbol())) return P_INF;
-  if (!max_plays && winning_sequence_exists(user_symbol())) return M_INF;
-  if (turn > MAX_TURNS)                                     return DRAW_VAL;
-
-  int evaluation;
-
-  if (max_plays) {
-
-    // Initially, any move is the best move for the maximizing player
-    int max_evaluation = M_INF;
-
-    /* Regard every possible move the maximizing player can
-     * play as a next game state
-     */
-
-    for (int i = 0; i < SIZE; i++) {
-      for (int j = 0; j < SIZE; j++) {
-        if (is_board(i, j, EMPTY)) {
-
-          // Simulate next game state to call minimax again and then undo it
-          set_board(i, j, comp_symbol());
-          evaluation = minimax(false, stop, turn+1, row, col);
-          set_board(i, j, EMPTY);
-
-          /* User may have a winning move that needs to be blocked (the stop
-           * flag gets triggered only on the first recursive call of minimax)
-           */
-
-          if (*stop) return M_INF; // The search stops here
-
-          if (max_evaluation < evaluation) {
-            max_evaluation = evaluation;
-
-            /* The best move is decided on the first level of the minimax
-             * tree, and if a winning move is reached for the computer, the
-             * search stops
-             */
-
-            if (turn == turn_no()) {
-              *row = i, *col = j;
-              if (max_evaluation == P_INF) return P_INF;
-            }
-          }
-        }
-      }
-    }
-
-    return max_evaluation;
-  }
-
-  // Initially, any move is the worst move for the minimizing player
-  int min_evaluation = P_INF;
-
-  /* Regard every possible move the minimizing player can
-   * play as a next game state
-   */
-
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j < SIZE; j++) {
-      if (is_board(i, j, EMPTY)) {
-
-        // Simulate next game state to call minimax again and then undo it
-        set_board(i, j, user_symbol());
-        evaluation = minimax(true, stop, turn+1, row, col);
-        set_board(i, j, EMPTY);
-
-        if (min_evaluation > evaluation) {
-          min_evaluation = evaluation;
-
-          /* If the user's next move is a winning one, then the computer
-           * needs to block it. For that purpose, the stop flag is activated
-           * and the indeces of that winning move are saved
-           */
-
-          if (turn == turn_no() - 1 && min_evaluation == M_INF) {
-            *row = i, *col = j;
-            *stop = true;
-            return M_INF;
-          }
-        }
-      }
-    }
-  }
-
-  return min_evaluation;
-}
-
-bool winning_sequence_exists(char symbol) {
-  for (int i = 0; i < SIZE; i++) {
-    if (is_board(i, 0, symbol)
-     && is_board(i, 1, symbol)
-     && is_board(i, 2, symbol)) return true;
-
-    if (is_board(0, i, symbol)
-     && is_board(1, i, symbol)
-     && is_board(2, i, symbol)) return true;
-  }
-
-  if (is_board(0, 0, symbol)
-   && is_board(1, 1, symbol)
-   && is_board(2, 2, symbol)) return true;
-
-  if (is_board(0, 2, symbol)
-   && is_board(1, 1, symbol)
-   && is_board(2, 0, symbol)) return true;
-
-  return false;
-}
-
-/* Checks whether the game has ended, in which case the
- * appropriate signalling (state) value is returned
- */
-
-state_t game_state(void) {
-  if (winning_sequence_exists(user_symbol())) return WON;
-  if (winning_sequence_exists(comp_symbol())) return LOST;
-  if (turn_no() == MAX_TURNS)                 return DRAW;
-
-  return STILL_PLAYING;
+void terminate_game_session(char *msg) {
+  printf("%s\n", msg);
+  exit(EXIT_SUCCESS);
 }
