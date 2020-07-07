@@ -1,8 +1,7 @@
 #include <stdio.h>
 
-#include "../include/tic_tac_toe.h"
-#include "../include/utilities.h"
-#include "../include/board.h"
+#include "utilities.h"
+#include "board.h"
 
 void init_board(void) {
   for (int i = 0; i < SIZE; i++)
