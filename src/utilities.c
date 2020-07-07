@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/tic_tac_toe.h"
-#include "../include/utilities.h"
+#include "tic_tac_toe.h"
+#include "utilities.h"
 
-/* Processes command line arguments */
+// Processes command line arguments
 void process_CLA(int argc, char **argv) {
-  game.user_symbol = NOUGHT; /* Default user symbol */
-  game.comp_symbol = CROSS; /* Default computer symbol */
+  game.user_symbol = NOUGHT; // Default user symbol
+  game.comp_symbol = CROSS; // Default computer symbol
 
   if (argc == 1) return;
 
@@ -26,9 +26,9 @@ void process_CLA(int argc, char **argv) {
   if (argv[1][2] != '\0') terminate_game_session("Invalid program arguments");
 }
 
-bool_t valid_index(int index) { return (index >= 0 && index < SIZE); }
+bool valid_index(int index) { return (index >= 0 && index < SIZE); }
 
-bool_t valid_indeces(int row, int col) {
+bool valid_indeces(int row, int col) {
   return (valid_index(row) && valid_index(col));
 }
 
@@ -46,7 +46,7 @@ char get_board(int row, int col) {
   return game.board[row][col];
 }
 
-bool_t is_board(int row, int col, char symbol) {
+bool is_board(int row, int col, char symbol) {
   if (!valid_indeces(row, col))
     terminate_game_session("error: invalid indeces (is_board)");
 
@@ -55,7 +55,7 @@ bool_t is_board(int row, int col, char symbol) {
 
 char user_symbol(void)  { return game.user_symbol; }
 char comp_symbol(void)  { return game.comp_symbol; }
-bool_t user_plays(void) { return game.user_plays;  }
+bool user_plays(void) { return game.user_plays;  }
 int turn_no(void)       { return game.turn_no;     }
 
 void skip_whitespace(void) {
