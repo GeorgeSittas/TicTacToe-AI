@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../include/tic_tac_toe.h"
-#include "../include/utilities.h"
-#include "../include/board.h"
+#include "tic_tac_toe.h"
+#include "utilities.h"
+#include "board.h"
 
 game_t game;
 
@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
       computer_move();
     }
 
-    /* Check if the game is over, in which case the program will terminate */
+    // Check if the game is over, in which case the program will terminate
     switch (game_state()) {
       case WON:  print_board(); terminate_game_session("You win!");
       case LOST: print_board(); terminate_game_session("You lose!");
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
       case STILL_PLAYING: break;
     }
 
-    /* Alternate computer and user moves */
+    // Alternate computer and user moves
     next_turn();
   }
 
