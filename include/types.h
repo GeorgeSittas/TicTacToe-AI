@@ -1,6 +1,7 @@
 #pragma once
 
-typedef enum {false=0, true=1} bool_t;
+#include <stdbool.h>
+
 typedef enum {STILL_PLAYING, WON, LOST, DRAW} state_t;
 
 #define SIZE      3
@@ -14,6 +15,6 @@ typedef struct game {
   char board[SIZE][SIZE];
   char user_symbol;
   char comp_symbol;
-  bool_t user_plays;
+  bool user_plays;
   int turn_no;
 } game_t;
