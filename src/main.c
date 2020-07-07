@@ -1,75 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-#include "../include/tic_tac_toe.h"
-#include "../include/utilities.h"
+#include "tic_tac_toe.h"
+#include "utilities.h"
+#include "board.h"
 
-// Processes command line arguments
-void process_CLA(int argc, char **argv) {
-  game.user_symbol = NOUGHT; // Default user symbol
-  game.comp_symbol = CROSS; // Default computer symbol
+game_t game;
 
-  if (argc == 1) return;
+int main(int argc, char **argv) {
+  process_CLA(argc, argv);
+  init_game();
 
-  if (argc > 2 || argv[1][0] != '-')
-    terminate_game_session("Invalid program arguments");
+  while (true) {
+    print_board();
 
-  switch (argv[1][1]) {
-    case 'x': case 'X':
-      game.user_symbol = CROSS;
-      game.comp_symbol = NOUGHT;
-      break;
+    if (user_plays()) {
+      printf("User's turn\n");
+      user_move();
+    }
+    else {
+      printf("Computer's turn\n");
+      usleep(MOVE_DELAY);
+      computer_move();
+    }
 
-    default: terminate_game_session("Invalid program arguments");
+    // Check if the game is over, in which case the program will terminate
+    switch (game_state()) {
+      case WON:  print_board(); terminate_game_session("You win!");
+      case LOST: print_board(); terminate_game_session("You lose!");
+      case DRAW: print_board(); terminate_game_session("Draw!");
+      case STILL_PLAYING: break;
+    }
+
+    // Alternate computer and user moves
+    next_turn();
   }
 
-  if (argv[1][2] != '\0') terminate_game_session("Invalid program arguments");
-}
-
-bool valid_index(int index) { return (index >= 0 && index < SIZE); }
-
-bool valid_indeces(int row, int col) {
-  return (valid_index(row) && valid_index(col));
-}
-
-void set_board(int row, int col, char symbol) {
-  if (!valid_indeces(row, col))
-    terminate_game_session("error: invalid indeces (set_board)");
-
-  game.board[row][col] = symbol;
-}
-
-char get_board(int row, int col) {
-  if (!valid_indeces(row, col))
-    terminate_game_session("error: invalid indeces (get_board)");
-
-  return game.board[row][col];
-}
-
-bool is_board(int row, int col, char symbol) {
-  if (!valid_indeces(row, col))
-    terminate_game_session("error: invalid indeces (is_board)");
-
-  return (get_board(row, col) == symbol);
-}
-
-char user_symbol(void)  { return game.user_symbol; }
-char comp_symbol(void)  { return game.comp_symbol; }
-bool user_plays(void) { return game.user_plays;  }
-int turn_no(void)       { return game.turn_no;     }
-
-void skip_whitespace(void) {
-  int token = getchar();
-
-  while (token == ' ' || token == '\t')
-    token = getchar();
-
-  ungetc(token, stdin);
-}
-
-void flush_input(void) { while (getchar() != '\n'); }
-
-void terminate_game_session(char *msg) {
-  printf("%s\n", msg);
-  exit(EXIT_SUCCESS);
+  return 0;
 }
