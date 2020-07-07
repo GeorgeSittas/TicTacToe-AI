@@ -1,22 +1,25 @@
-object_files = ./src/main.o ./src/tic_tac_toe.o ./src/board.o ./src/utilities.o
-header_files = ./include/types.h ./include/tic_tac_toe.h \
-               ./include/utilities.h ./include/board.h
+OBJ_DIR = ./src
+INC_DIR = ./include
 
+CFLAGS = -Wall -I$(INC_DIR)
 CC = gcc
-FLAGS = -Wall
 
-tic_tac_toe: $(object_files)
-	$(CC) $(FLAGS) $(LIB) $(object_files) -o tic_tac_toe
+OBJS = $(OBJ_DIR)/main.o  $(OBJ_DIR)/tic_tac_toe.o \
+       $(OBJ_DIR)/board.o $(OBJ_DIR)/utilities.o
 
-main.o: $(header_files)
+EXEC = tic_tac_toe
 
-tic_tac_toe.o: $(header_files)
+# The @ character is used to silence make's output
 
-board.o: $(header_files)
+$(EXEC): $(OBJS)
+	@$(CC) $(OBJS) -o $(EXEC)
 
-play: tic_tac_toe
-	./tic_tac_toe
+.SILENT: $(OBJS) # Silence implicit rule output
+.PHONY: clean
+
+play: $(EXEC)
+	@./$(EXEC)
 
 clean:
 	@echo "Cleaning up .."
-	rm $(object_files) tic_tac_toe
+	@rm -f $(OBJS) $(EXEC)
