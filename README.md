@@ -10,21 +10,17 @@ git clone https://github.com/GeorgeSittas/TicTacToe-AI.git
 ```
 
 ### Usage
-The following command line option is available during the compilation phase:
-
-- \-x : Sets the user's symbol to 'X' (cross)
 
 #### Starting the game
-##### 1) with default parameters (i.e. user symbol is set to 'O')
+##### 1) Computer plays first
 ```
 cd TicTacToe-AI
 make play
 ```
-##### 2) with user-specified parameters
+##### 2) User plays first
 ```
 cd TicTacToe-AI
-make
-./tic_tac_toe <parameter_list> (e.g. ./tic_tac_toe -x)
+make play USER=first
 ```
 
 #### File cleanup
