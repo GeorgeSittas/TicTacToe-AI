@@ -1,8 +1,6 @@
 # TicTacToe-AI
 Goal for this project is to make the pen-and-paper game [Tic-Tac-Toe](https://en.wikipedia.org/wiki/Tic-tac-toe) and a
-[rational agent](https://en.wikipedia.org/wiki/Rational_agent) that can play it, using C.
-
-The game window looks like this:
+[rational agent](https://en.wikipedia.org/wiki/Rational_agent) that can play it, using C.<br/>The game window looks like this:
 
 ![](https://i.imgur.com/Xdk4HAt.png)
 
